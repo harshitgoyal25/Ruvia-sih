@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173948934885",
+    "project_id": "ruvia-sih",
+    "storage_bucket": "ruvia-sih.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173948934885:android:776e6613d374364aeb920c",
+        "android_client_info": {
+          "package_name": "com.example.ruvia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGMo8lmEKmVIRVln--dxFgyb7xNVGrJJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

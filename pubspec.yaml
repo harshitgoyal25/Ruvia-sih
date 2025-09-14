@@ -1,0 +1,40 @@
+name: ruvia
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_map: ^6.0.0          # 2D mapping (OpenStreetMap)
+  latlong2: ^0.9.0             # LatLng type for flutter_map
+  geolocator: ^14.0.2          # Live GPS location fetching
+  
+  google_sign_in: ^6.1.5
+  cloud_firestore: ^6.0.1
+  firebase_core: ^4.1.0
+  firebase_auth: ^6.0.2
+  google_fonts: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/login_bg.png
+    - assets/google_icon.png
+    - assets/avator.png
+    - assets/LOGO.png
+  fonts:
+    - family: LogoFont
+      fonts:
+        - asset: assets/fonts/logo.ttf
+    - family: GameFont
+      fonts:
+        - asset: assets/fonts/game.ttf
