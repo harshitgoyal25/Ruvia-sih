@@ -1,4 +1,3 @@
-// TODO Implement this library.
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,17 +14,32 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
   bool isLoading = false;
+  bool showPassword = false;
+  bool showConfirmPassword = false;
 
   void handleSignUp() async {
     final fullName = fullNameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
+    final confirmPassword = confirmPasswordController.text.trim();
 
-    if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
+    // Validate fields
+    if (fullName.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
       return;
     }
 
@@ -48,7 +62,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             .set({
               'name': fullName,
               'email': email,
-              'phoneNumber': '', // You can add a phone number input if needed
+              'phoneNumber': '',
               'runCount': 0,
               'color': userColor,
               'createdAt': FieldValue.serverTimestamp(),
@@ -90,14 +104,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final green = Colors.greenAccent[400] ?? Colors.greenAccent;
+    final green = Colors.greenAccent ?? Colors.greenAccent;
 
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
           Image.asset('assets/login_bg.png', fit: BoxFit.cover),
-          Container(color: Colors.black.withOpacity(0.6)),
+          Container(color: Colors.black.withOpacity(0.4)),
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -128,6 +142,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: green,
+                    ),
+                  ),
+                  Text(
+                    'create your account',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -181,7 +202,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           const SizedBox(height: 16),
                           TextField(
                             controller: passwordController,
-                            obscureText: true,
+                            obscureText: !showPassword,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -195,6 +216,52 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.white54,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = !showPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: confirmPasswordController,
+                            obscureText: !showConfirmPassword,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              labelStyle: const TextStyle(
+                                color: Colors.white70,
+                              ),
+                              hintText: '***************',
+                              hintStyle: const TextStyle(color: Colors.white54),
+                              filled: true,
+                              fillColor: Colors.black.withOpacity(0.6),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  showConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.white54,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    showConfirmPassword = !showConfirmPassword;
+                                  });
+                                },
                               ),
                             ),
                           ),

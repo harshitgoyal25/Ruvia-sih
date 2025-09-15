@@ -1,4 +1,3 @@
-// TODO Implement this library.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -155,12 +154,29 @@ class _HomePageState extends State<HomePage> {
             // Handle notification tap
           },
         ),
-        actions: const [
-          Padding(
+        actions: [
+          // IconButton(
+          //   icon: const Icon(
+          //     Icons.refresh,
+          //     color: Color.fromARGB(255, 99, 227, 82),
+          //   ),
+          //   tooltip: 'Refresh Territories',
+          //   onPressed: () async {
+          //     // Re-fetch polygon and territory data from Firestore
+          //     await fetchTerritories();
+          //   },
+          // ),
+          const Padding(
             padding: EdgeInsets.only(right: 12),
             child: FloatingProfileButton(avatarImage: "assets/avator.png"),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 99, 227, 82),
+        child: const Icon(Icons.refresh_rounded, color: Colors.black),
+        tooltip: 'Refresh Map',
+        onPressed: fetchTerritories,
       ),
 
       body: FlutterMap(

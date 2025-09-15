@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ruvia/services/user_services.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FloatingProfileButton extends StatefulWidget {
   final String avatarImage;
@@ -15,7 +14,7 @@ class FloatingProfileButton extends StatefulWidget {
 }
 
 class _FloatingProfileButtonState extends State<FloatingProfileButton> {
-  String userName = 'Loading...'; // Initial value while loading
+  String userName = 'Loading...';
 
   @override
   void initState() {
@@ -23,11 +22,10 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
     _loadUserName();
   }
 
-  // Async function to load the user name
   Future<void> _loadUserName() async {
     String name = await UserService.getUserName();
     setState(() {
-      userName = name; // Update the UI with the fetched name
+      userName = name;
     });
   }
 
@@ -175,7 +173,7 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
                     ),
                     OutlinedButton(
                       onPressed: () {
-                        // TODO: Implement view profile navigation
+                        Navigator.pushNamed(context, '/profile');
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.green),
@@ -201,7 +199,7 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
                 Expanded(
                   child: ListView.separated(
                     physics: const BouncingScrollPhysics(),
-                    itemCount: _profileOptions.length,
+                    itemCount: _buildProfileOptions(context).length,
                     separatorBuilder: (context, index) => Divider(
                       height: 1,
                       color: Colors.grey[800],
@@ -209,7 +207,7 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
                       endIndent: 20,
                     ),
                     itemBuilder: (context, index) {
-                      final option = _profileOptions[index];
+                      final option = _buildProfileOptions(context)[index];
                       return ListTile(
                         leading: Icon(
                           option.icon,
@@ -252,7 +250,6 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
                         Navigator.pushReplacementNamed(context, '/login');
                       }
                     },
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -326,7 +323,6 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
                       }
                     }
                   },
-
                   child: const Text(
                     "Delete Account",
                     style: TextStyle(
@@ -342,6 +338,26 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
         );
       },
     );
+  }
+
+  List<ProfileOption> _buildProfileOptions(BuildContext context) {
+    return [
+      ProfileOption(
+        icon: Icons.edit,
+        text: "Edit Profile",
+        onTap: () {
+          Navigator.pushNamed(context, '/edit');
+        },
+      ),
+      ProfileOption(icon: Icons.run_circle, text: "Run Logs"),
+      ProfileOption(icon: Icons.settings, text: "App Settings"),
+      ProfileOption(icon: Icons.privacy_tip, text: "Privacy"),
+      ProfileOption(icon: Icons.credit_card, text: "Plans & Purchases"),
+      ProfileOption(icon: Icons.link, text: "Integrations"),
+      ProfileOption(icon: Icons.help, text: "FAQs"),
+      ProfileOption(icon: Icons.support, text: "Support"),
+      ProfileOption(icon: Icons.list_alt, text: "App Change Log"),
+    ];
   }
 
   @override
@@ -373,16 +389,3 @@ class ProfileOption {
 
   ProfileOption({required this.icon, required this.text, this.onTap});
 }
-
-final List<ProfileOption> _profileOptions = [
-  ProfileOption(icon: Icons.edit, text: "Edit Profile"),
-  ProfileOption(icon: Icons.settings, text: "App Settings"),
-  ProfileOption(icon: Icons.privacy_tip, text: "Privacy"),
-  ProfileOption(icon: Icons.credit_card, text: "Plans & Purchases"),
-  ProfileOption(icon: Icons.link, text: "Integrations"),
-  ProfileOption(icon: Icons.help, text: "FAQs"),
-  ProfileOption(icon: Icons.support, text: "Support"),
-  ProfileOption(icon: Icons.list_alt, text: "App Change Log"),
-];
-
-// confirmation box
