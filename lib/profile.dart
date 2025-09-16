@@ -3,16 +3,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:ruvia/widgets/floating_profile_button.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final String? userId;
+  const ProfilePage({Key? key, this.userId}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+  late final String uid;
+
+  @override
+  void initState() {
+    super.initState();
+    // Safe fallback to current user if userId isn't provided
+    uid = widget.userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +44,15 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: accentColor,
-          ), // ✅ Back button here
+          icon: Icon(Icons.arrow_back, color: accentColor),
           onPressed: () {
-            Navigator.pop(context); // ✅ Goes back to the previous screen
+            Navigator.pop(context);
           },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: CircleAvatar(
-              backgroundColor: accentColor,
-              child: Icon(Icons.person, color: Colors.black),
-            ),
+          const Padding(
+            padding: EdgeInsets.only(right: 12),
+            child: FloatingProfileButton(avatarImage: "assets/avator.png"),
           ),
         ],
       ),
@@ -58,7 +61,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Avatar and Username
             StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection('users')
@@ -89,8 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             const SizedBox(height: 24),
-
-            // Stats Card
             Card(
               color: cardColor,
               shape: RoundedRectangleBorder(
@@ -142,8 +142,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 24),
-
-            // Run Logs Header
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -157,8 +155,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 12),
-
-            // Run Logs List
             Card(
               color: cardColor,
               shape: RoundedRectangleBorder(

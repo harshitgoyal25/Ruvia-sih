@@ -4,8 +4,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+
 import 'widgets/floating_profile_button.dart';
 import 'widgets/bottomBar.dart';
+import 'profile.dart'; // Your user profile screen
+import 'package:point_in_polygon/point_in_polygon.dart'; // Add this package
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
   List<Polygon> _polygons = [];
+  // List of polygon ownership maps: {'polygon': Polygon, 'userId': String}
+  List<Map<String, dynamic>> _polygonOwners = [];
   int _selectedBottomIndex = 0;
   LatLng? _currentLatLng;
   final LatLng _defaultLocation = LatLng(
@@ -33,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) return;
-
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -46,7 +50,6 @@ class _HomePageState extends State<HomePage> {
       final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
-
       if (!mounted) return;
       setState(() {
         _currentLatLng = LatLng(pos.latitude, pos.longitude);
@@ -68,6 +71,7 @@ class _HomePageState extends State<HomePage> {
         .get();
 
     List<Polygon> polygons = [];
+    List<Map<String, dynamic>> polygonOwners = [];
 
     for (var doc in querySnapshot.docs) {
       final data = doc.data();
@@ -78,7 +82,6 @@ class _HomePageState extends State<HomePage> {
           .collection('users')
           .doc(userId)
           .get();
-
       final userData = userDoc.data();
       final userColor = userData != null && userData.containsKey('color')
           ? userData['color'] as String
@@ -89,35 +92,53 @@ class _HomePageState extends State<HomePage> {
         final lng = point['lng'] as double;
         return LatLng(lat, lng);
       }).toList();
-
       if (points.isNotEmpty && points.first != points.last) {
         points.add(points.first);
       }
-      if (_polygons.isNotEmpty && _polygons.first.points.isNotEmpty) {
-        final firstPoint = _polygons.first.points.first;
-        _mapController.move(firstPoint, 15); // Zoom level adjustable
-      }
 
-      polygons.add(
-        Polygon(
-          points: points,
-          color: HexColor.fromHex(userColor).withOpacity(0.8),
-          borderColor: HexColor.fromHex(userColor),
-          borderStrokeWidth: 2,
-          isFilled: true,
-        ),
+      Polygon polygon = Polygon(
+        points: points,
+        color: HexColor.fromHex(userColor).withOpacity(0.8),
+        borderColor: HexColor.fromHex(userColor),
+        borderStrokeWidth: 2,
+        isFilled: true,
       );
+      polygons.add(polygon);
+      polygonOwners.add({'polygon': polygon, 'userId': userId});
     }
 
     if (!mounted) return;
     setState(() {
       _polygons = polygons;
+      _polygonOwners = polygonOwners;
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _mapController.move(_mapController.center, _mapController.zoom);
+      if (mounted && polygons.isNotEmpty && polygons.first.points.isNotEmpty) {
+        final firstPoint = polygons.first.points.first;
+        _mapController.move(firstPoint, 15); // Zoom level adjustable
       }
     });
+  }
+
+  // Point-in-polygon detection using the 'point_in_polygon' package
+
+  bool _containsLatLng(List<LatLng> polygon, LatLng point) {
+    // The Point constructor expects {required num x, required num y}
+    final poly = polygon
+        .map((latLng) => Point(x: latLng.latitude, y: latLng.longitude))
+        .toList();
+    return Poly.isPointInPolygon(
+      Point(x: point.latitude, y: point.longitude),
+      poly,
+    );
+  }
+
+  void _navigateToProfile(String userId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfilePage(userId: userId)),
+    );
   }
 
   @override
@@ -148,17 +169,6 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         actions: [
-          // IconButton(
-          //   icon: const Icon(
-          //     Icons.refresh,
-          //     color: Color.fromARGB(255, 99, 227, 82),
-          //   ),
-          //   tooltip: 'Refresh Territories',
-          //   onPressed: () async {
-          //     // Re-fetch polygon and territory data from Firestore
-          //     await fetchTerritories();
-          //   },
-          // ),
           const Padding(
             padding: EdgeInsets.only(right: 12),
             child: FloatingProfileButton(avatarImage: "assets/avator.png"),
@@ -171,13 +181,22 @@ class _HomePageState extends State<HomePage> {
         tooltip: 'Refresh Map',
         onPressed: fetchTerritories,
       ),
-
       body: FlutterMap(
         mapController: _mapController,
         options: MapOptions(
           initialCenter: center,
           initialZoom: 17.0,
           minZoom: 3,
+          onTap: (tapPosition, tappedLatLng) {
+            for (var entry in _polygonOwners) {
+              Polygon polygon = entry['polygon'];
+              String userId = entry['userId'];
+              if (_containsLatLng(polygon.points, tappedLatLng)) {
+                _navigateToProfile(userId);
+                break;
+              }
+            }
+          },
         ),
         children: [
           TileLayer(
@@ -225,7 +244,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedBottomIndex,
         onTap: _onBottomNavSelect,
