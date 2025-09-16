@@ -24,9 +24,11 @@ class _FloatingProfileButtonState extends State<FloatingProfileButton> {
 
   Future<void> _loadUserName() async {
     String name = await UserService.getUserName();
-    setState(() {
-      userName = name;
-    });
+    if (mounted) {
+      setState(() {
+        userName = name;
+      });
+    }
   }
 
   Future<bool> _showConfirmationDialog(String title, String content) async {

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ruvia/widgets/floating_profile_button.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -114,11 +115,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: bgColor,
         elevation: 2,
         title: Text(
-          'RUVIA',
-          style: TextStyle(
-            color: accentColor,
-            fontWeight: FontWeight.bold,
-            fontFamily: GoogleFonts.montserrat().fontFamily,
+          "Ruvia",
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
+            letterSpacing: 1.2,
+            color: const Color.fromARGB(255, 99, 227, 82),
           ),
         ),
         centerTitle: true,
@@ -129,12 +131,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: CircleAvatar(
-              backgroundColor: accentColor,
-              child: Icon(Icons.person, color: Colors.black),
-            ),
+          const Padding(
+            padding: EdgeInsets.only(right: 12),
+            child: FloatingProfileButton(avatarImage: "assets/avator.png"),
           ),
         ],
       ),

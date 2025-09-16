@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'widgets/bottomBar.dart';
 import 'widgets/floating_profile_button.dart';
 
@@ -25,13 +24,14 @@ class _MePageState extends State<MePage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 13, 15, 12),
-        elevation: 3,
-        title: const Text(
+        elevation: 0,
+        title: Text(
           "Ruvia",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
             letterSpacing: 1.2,
-            color: Color.fromARGB(255, 99, 227, 82),
+            color: const Color.fromARGB(255, 99, 227, 82),
           ),
         ),
         centerTitle: true,
@@ -51,18 +51,14 @@ class _MePageState extends State<MePage> {
           ),
         ],
       ),
-
       body: Stack(
         children: [
-          // Background image
-          Container(decoration: BoxDecoration()),
-          // Gradient overlay
+          // Flat minimal background
           Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 14, 14, 15).withOpacity(1),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 14, 14, 15),
             ),
           ),
-          // Content
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -71,14 +67,18 @@ class _MePageState extends State<MePage> {
                 children: [
                   // Level card
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
-                    elevation: 6,
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 12,
+                      ),
                       leading: const CircleAvatar(
-                        backgroundColor: const Color(0xFF79c339),
+                        backgroundColor: Color(0xFF79c339),
                         child: Icon(
                           Icons.directions_run,
                           color: Colors.white,
@@ -87,31 +87,30 @@ class _MePageState extends State<MePage> {
                       ),
                       title: Text(
                         'Level 1',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
                         ),
                       ),
                       subtitle: Text(
                         '102XP to next level',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                           color: const Color(0xFF79c339),
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
                         ),
                       ),
                       trailing: const Icon(
                         Icons.arrow_forward_ios,
                         color: Color.fromARGB(255, 254, 255, 255),
+                        size: 16,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
-                  // XP Challenges
+                  // XP Challenges (minimal + consistent)
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
-                    elevation: 3,
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -122,95 +121,107 @@ class _MePageState extends State<MePage> {
                         children: [
                           Text(
                             'XP Challenges',
-                            style: TextStyle(
+                            style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.bold,
-                              fontFamily: GoogleFonts.montserrat().fontFamily,
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 15,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _ChallengeCard(
-                                icon: Icons.camera_alt,
-                                label: 'Add a profile picture',
-                                xp: 20,
-                              ),
-                              _ChallengeCard(
-                                icon: Icons.privacy_tip,
-                                label: 'Set preference for privacy',
-                                xp: 30,
-                              ),
-                              _ChallengeCard(
-                                icon: Icons.person_add,
-                                label: 'Follow on Instagram',
-                                xp: 10,
-                              ),
-                            ],
+                          const SizedBox(height: 12),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: const [
+                                _ChallengeCard(
+                                  icon: Icons.camera_alt,
+                                  label: 'Add a profile picture',
+                                  xp: 20,
+                                ),
+                                SizedBox(width: 10),
+                                _ChallengeCard(
+                                  icon: Icons.privacy_tip,
+                                  label: 'Set preference for privacy',
+                                  xp: 30,
+                                ),
+                                SizedBox(width: 10),
+                                _ChallengeCard(
+                                  icon: Icons.person_add,
+                                  label: 'Follow on Instagram',
+                                  xp: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
                   // Competitions
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Competitions',
-                            style: TextStyle(
+                            style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.bold,
-                              fontFamily: GoogleFonts.montserrat().fontFamily,
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 15,
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Terra Comp 25.7 | \$2,988 AUD in Prizes',
-                            style: TextStyle(
-                              fontSize: 15,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              fontFamily: GoogleFonts.montserrat().fontFamily,
                               color: const Color(0xFF79c339),
                             ),
                           ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: const [
-                              _CompetitionCard(
-                                title: "THE BREATH HAUS",
-                                time: "Ends: 20h 16m",
-                              ),
-                              SizedBox(width: 10),
-                              _CompetitionCard(
-                                title: "THE BREATH HAUS",
-                                time: "Ends: 20h 16m",
-                              ),
-                            ],
+                          const SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: const [
+                                _CompetitionCard(
+                                  title: "THE BREATH HAUS",
+                                  time: "Ends: 20h 16m",
+                                ),
+                                SizedBox(width: 10),
+                                _CompetitionCard(
+                                  title: "THE BREATH HAUS",
+                                  time: "Ends: 20h 16m",
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF79c339),
+                              backgroundColor: const Color(0xFF79c339),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(14),
                                 ),
                               ),
+                              elevation: 0,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
                             ),
-                            child: const Text(
+                            child: Text(
                               'View competition',
-                              style: TextStyle(
+                              style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
@@ -221,13 +232,14 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
                   // Local Battle
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -235,21 +247,24 @@ class _MePageState extends State<MePage> {
                         vertical: 14,
                       ),
                       child: ListTile(
+                        dense: true,
                         leading: const Icon(
                           Icons.sports_kabaddi,
-                          color: Color.fromARGB(255, 255, 255, 255),
+                          color: Colors.white,
                         ),
-                        title: const Text(
+                        title: Text(
                           'Local Battle',
-                          style: TextStyle(
+                          style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(221, 255, 255, 255),
-                            // Navigator.pushNamed(context, '/localBattle'); // Uncomment to navigate on tap
+                            color: Colors.white,
                           ),
                         ),
-                        subtitle: const Text(
+                        subtitle: Text(
                           'Find nearby runners to compete!',
-                          style: TextStyle(color: Color(0xFF79c339)),
+                          style: GoogleFonts.montserrat(
+                            color: const Color(0xFF79c339),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
@@ -262,70 +277,72 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 20),
 
-                  // Join/Create Club
+                  // Join/Create Club - horizontal, minimal
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {
-                              // Navigator.pushNamed(context, '/joinClub');
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(14),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            OutlinedButton(
+                              onPressed: () {
+                                // Navigator.pushNamed(context, '/joinClub');
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 22,
+                                  vertical: 15,
                                 ),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 14,
-                              ),
-                            ),
-                            child: Text(
-                              "Join a Club",
-                              style: TextStyle(
-                                color: const Color.fromARGB(221, 255, 255, 255),
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
-                              ),
-                            ),
-                          ),
-                          OutlinedButton(
-                            onPressed: null, // Disabled
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: Color.fromARGB(221, 255, 255, 255),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(14),
+                              child: Text(
+                                "Join a Club",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
                                 ),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 14,
+                            ),
+                            const SizedBox(width: 10),
+                            OutlinedButton(
+                              onPressed: null, // Disabled
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: Color.fromARGB(221, 255, 255, 255),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 22,
+                                  vertical: 15,
+                                ),
+                              ),
+                              child: Text(
+                                "Create Your Own Club",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              "Create Your Own Club",
-                              style: TextStyle(
-                                color: const Color.fromARGB(221, 255, 255, 255),
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -333,8 +350,8 @@ class _MePageState extends State<MePage> {
 
                   // Insights
                   Card(
-                    color: const Color(0xFF27272A).withOpacity(0.5),
-                    elevation: 3,
+                    color: const Color(0xFF232323),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -344,7 +361,7 @@ class _MePageState extends State<MePage> {
                         horizontal: 24,
                       ),
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(14),
                         onTap: () {
                           Navigator.pushNamed(context, '/insights');
                         },
@@ -353,10 +370,10 @@ class _MePageState extends State<MePage> {
                           children: [
                             Text(
                               "Insights:",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 255, 255, 255),
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                                fontSize: 15,
                               ),
                             ),
                             const SizedBox(width: 14),
@@ -364,9 +381,9 @@ class _MePageState extends State<MePage> {
                             const SizedBox(width: 10),
                             Text(
                               "Achievements / Stats",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -389,6 +406,7 @@ class _MePageState extends State<MePage> {
 }
 
 // --- helper widgets ---
+
 class _ChallengeCard extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -402,31 +420,49 @@ class _ChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          backgroundColor: Color(0xFF79c339),
-          child: Icon(icon, color: Colors.white),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: const Color.fromARGB(255, 255, 255, 255),
+    return SizedBox(
+      width: 108, // Ensures all cards same width
+      child: Card(
+        color: const Color(0xFF202022),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: const Color(0xFF79c339).withOpacity(0.13),
+                child: Icon(icon, color: const Color(0xFF79c339), size: 20),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  height: 1.22,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '+$xp XP',
+                style: GoogleFonts.montserrat(
+                  fontSize: 11,
+                  color: const Color(0xFF79c339),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 2),
-        Text(
-          '+$xp XP',
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.green,
-            fontFamily: GoogleFonts.montserrat().fontFamily,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -438,33 +474,40 @@ class _CompetitionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 110,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Color(0xFF79c339).withOpacity(0.8),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 12,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-            textAlign: TextAlign.center,
+    return SizedBox(
+      width: 130,
+      child: Card(
+        color: const Color(0xFF79c339).withOpacity(0.12),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 9),
+          child: Column(
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12.2,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                time,
+                style: GoogleFonts.montserrat(
+                  fontSize: 11,
+                  color: const Color(0xFF79c339),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 7),
-          Text(
-            time,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

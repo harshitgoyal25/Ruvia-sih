@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final green = Colors.greenAccent[400] ?? Colors.greenAccent;
+    final green = const Color(0xFF7BC534);
 
     return Scaffold(
       body: Stack(
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  Image.asset('assets/LOGO.png', height: 120),
+                  Image.asset('assets/logo.png', height: 120),
                   const SizedBox(height: 16),
                   const Text(
                     'Welcome to',
@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'RUVIA',
                     style: GoogleFonts.montserrat(
+                      fontStyle: FontStyle.italic,
                       fontSize: 66,
                       fontWeight: FontWeight.bold,
                       color: green,

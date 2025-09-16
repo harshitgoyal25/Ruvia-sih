@@ -104,7 +104,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final green = Colors.greenAccent ?? Colors.greenAccent;
+    final green = Color(0xFF7BC534);
 
     return Scaffold(
       body: Stack(
@@ -133,14 +133,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Image.asset('assets/LOGO.png', height: 100),
+                  const SizedBox(height: 25),
+                  Image.asset('assets/logo.png', height: 125),
                   const SizedBox(height: 16),
                   Text(
                     'Get Started',
                     style: GoogleFonts.montserrat(
                       fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic,
                       color: green,
                     ),
                   ),
@@ -148,6 +149,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     'create your account',
                     style: GoogleFonts.montserrat(
                       fontSize: 16,
+                      fontStyle: FontStyle.italic,
                       color: Colors.white,
                     ),
                   ),

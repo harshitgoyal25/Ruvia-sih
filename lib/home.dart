@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'widgets/floating_profile_button.dart';
@@ -68,16 +69,10 @@ class _HomePageState extends State<HomePage> {
 
     List<Polygon> polygons = [];
 
-    print('Fetched ${querySnapshot.docs.length} documents from publicRuns.');
-
     for (var doc in querySnapshot.docs) {
       final data = doc.data();
       final locationData = data['locationData'] as List<dynamic>;
       final userId = data['userId'] as String;
-
-      print(
-        'Processing run by user: $userId with ${locationData.length} points.',
-      );
 
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -103,28 +98,25 @@ class _HomePageState extends State<HomePage> {
         _mapController.move(firstPoint, 15); // Zoom level adjustable
       }
 
-      print('Points for this polygon: $points');
-
       polygons.add(
         Polygon(
           points: points,
-          color: HexColor.fromHex(
-            userColor,
-          ).withOpacity(0.8), // More visible fill
+          color: HexColor.fromHex(userColor).withOpacity(0.8),
           borderColor: HexColor.fromHex(userColor),
           borderStrokeWidth: 2,
-          isFilled: true, // Ensure fill is enabled
+          isFilled: true,
         ),
       );
     }
 
-    print('Total polygons created: ${polygons.length}');
-
+    if (!mounted) return;
     setState(() {
       _polygons = polygons;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _mapController.move(_mapController.center, _mapController.zoom);
+      if (mounted) {
+        _mapController.move(_mapController.center, _mapController.zoom);
+      }
     });
   }
 
@@ -136,12 +128,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 13, 15, 12),
         elevation: 3,
-        title: const Text(
+        title: Text(
           "Ruvia",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
             letterSpacing: 1.2,
-            color: Color.fromARGB(255, 99, 227, 82),
+            color: const Color.fromARGB(255, 99, 227, 82),
           ),
         ),
         centerTitle: true,

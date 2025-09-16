@@ -76,9 +76,10 @@ class _StartRunPageState extends State<StartRunPage> {
     _initializeBackgroundLocator();
     _determinePosition();
   }
+
   Future<void> _initializeBackgroundLocator() async {
-  await BackgroundLocator.initialize();
-}
+    await BackgroundLocator.initialize();
+  }
 
   Future<void> _determinePosition() async {
     bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
@@ -164,27 +165,28 @@ class _StartRunPageState extends State<StartRunPage> {
 
     // Start background location
     Map<String, dynamic> data = {'countInit': 1};
-await BackgroundLocator.registerLocationUpdate(
-  LocationCallbackHandler.callback,
-  initCallback: LocationCallbackHandler.initCallback,
-  initDataCallback: data,
-  disposeCallback: LocationCallbackHandler.disposeCallback,
-  autoStop: false,
-  androidSettings: AndroidSettings(
-    accuracy: LocationAccuracy.NAVIGATION,
-    interval: 5,
-    distanceFilter: 10,
-    client: LocationClient.google,
-    androidNotificationSettings: AndroidNotificationSettings(
-      notificationChannelName: 'Location tracking',
-      notificationTitle: 'Run in progress',
-      notificationMsg: 'Tracking your route',
-      notificationBigMsg: 'Background location is on to keep the app up-to-date with your location.',
-      notificationIconColor: Colors.grey,
-      notificationTapCallback: LocationCallbackHandler.notificationCallback,
-    ),
-  ),
-);
+    await BackgroundLocator.registerLocationUpdate(
+      LocationCallbackHandler.callback,
+      initCallback: LocationCallbackHandler.initCallback,
+      initDataCallback: data,
+      disposeCallback: LocationCallbackHandler.disposeCallback,
+      autoStop: false,
+      androidSettings: AndroidSettings(
+        accuracy: LocationAccuracy.NAVIGATION,
+        interval: 5,
+        distanceFilter: 10,
+        client: LocationClient.google,
+        androidNotificationSettings: AndroidNotificationSettings(
+          notificationChannelName: 'Location tracking',
+          notificationTitle: 'Run in progress',
+          notificationMsg: 'Tracking your route',
+          notificationBigMsg:
+              'Background location is on to keep the app up-to-date with your location.',
+          notificationIconColor: Colors.grey,
+          notificationTapCallback: LocationCallbackHandler.notificationCallback,
+        ),
+      ),
+    );
 
     // Foreground position updates for user UI
     _positionStream =
@@ -240,27 +242,28 @@ await BackgroundLocator.registerLocationUpdate(
     _stopwatch.start();
     _positionStream?.resume();
     Map<String, dynamic> data = {'countInit': 1};
-await BackgroundLocator.registerLocationUpdate(
-  LocationCallbackHandler.callback,
-  initCallback: LocationCallbackHandler.initCallback,
-  initDataCallback: data,
-  disposeCallback: LocationCallbackHandler.disposeCallback,
-  autoStop: false,
-  androidSettings: AndroidSettings(
-    accuracy: LocationAccuracy.NAVIGATION,
-    interval: 5,
-    distanceFilter: 10,
-    client: LocationClient.google,
-    androidNotificationSettings: AndroidNotificationSettings(
-      notificationChannelName: 'Location tracking',
-      notificationTitle: 'Run in progress',
-      notificationMsg: 'Tracking your route',
-      notificationBigMsg: 'Background location is on to keep the app up-to-date with your location.',
-      notificationIconColor: Colors.grey,
-      notificationTapCallback: LocationCallbackHandler.notificationCallback,
-    ),
-  ),
-);
+    await BackgroundLocator.registerLocationUpdate(
+      LocationCallbackHandler.callback,
+      initCallback: LocationCallbackHandler.initCallback,
+      initDataCallback: data,
+      disposeCallback: LocationCallbackHandler.disposeCallback,
+      autoStop: false,
+      androidSettings: AndroidSettings(
+        accuracy: LocationAccuracy.NAVIGATION,
+        interval: 5,
+        distanceFilter: 10,
+        client: LocationClient.google,
+        androidNotificationSettings: AndroidNotificationSettings(
+          notificationChannelName: 'Location tracking',
+          notificationTitle: 'Run in progress',
+          notificationMsg: 'Tracking your route',
+          notificationBigMsg:
+              'Background location is on to keep the app up-to-date with your location.',
+          notificationIconColor: Colors.grey,
+          notificationTapCallback: LocationCallbackHandler.notificationCallback,
+        ),
+      ),
+    );
     setState(() {});
   }
 
@@ -373,12 +376,13 @@ await BackgroundLocator.registerLocationUpdate(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 13, 15, 12),
         elevation: 3,
-        title: const Text(
+        title: Text(
           "Ruvia",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
             letterSpacing: 1.2,
-            color: Color.fromARGB(255, 99, 227, 82),
+            color: const Color.fromARGB(255, 99, 227, 82),
           ),
         ),
         centerTitle: true,
@@ -499,7 +503,7 @@ await BackgroundLocator.registerLocationUpdate(
                         if (!_isRunning)
                           _mainButton(
                             "Start Run",
-                            Colors.green,
+                            Color.fromARGB(255, 99, 227, 82),
                             _showPermissionDialogAndStart,
                             textColor: Colors.white,
                           ),
@@ -571,7 +575,7 @@ await BackgroundLocator.registerLocationUpdate(
         text,
         style: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w800,
           color: textColor,
           fontFamily: GoogleFonts.montserrat().fontFamily,
         ),

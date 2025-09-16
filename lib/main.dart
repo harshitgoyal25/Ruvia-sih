@@ -10,6 +10,7 @@ import 'insights.dart';
 import 'create_new_account.dart';
 import 'profile.dart';
 import 'edit.dart';
+import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,33 +32,56 @@ class MyApp extends StatelessWidget {
         '/run': (context) => StartRunPage(),
         '/insights': (context) => InsightsPage(),
         '/create': (context) => CreateAccountScreen(),
-        '/profile':(context)=> ProfilePage(),
-        '/edit':(context)=> EditProfilePage(),
+        '/profile': (context) => ProfilePage(),
+        '/edit': (context) => EditProfilePage(),
       },
-      home: AuthGate(),
+      home: const SplashScreenGate(),
     );
   }
 }
 
-class AuthGate extends StatelessWidget {
+// Splash screen that waits for BOTH the timer and Firebase
+class SplashScreenGate extends StatefulWidget {
+  const SplashScreenGate({super.key});
+  @override
+  State<SplashScreenGate> createState() => _SplashScreenGateState();
+}
+
+class _SplashScreenGateState extends State<SplashScreenGate> {
+  bool _timerDone = false;
+  bool _firebaseReady = false;
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 3s timer
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      setState(() => _timerDone = true);
+    });
+
+    // Wait for first Firebase user event
+    FirebaseAuth.instance.authStateChanges().first.then((user) {
+      if (mounted)
+        setState(() {
+          _firebaseReady = true;
+          _user = user;
+        });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        // Loading indicator while checking auth state
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-        // If user is logged in, show home, else login
-        if (snapshot.hasData && snapshot.data != null) {
-          return HomePage();
-        } else {
-          return LoginScreen();
-        }
-      },
-    );
+    if (!_timerDone || !_firebaseReady) {
+      return const SplashScreen(); // Show your custom animated splash screen
+    } else {
+      // After both timer and Firebase: show correct initial page
+      if (_user != null) {
+        return HomePage();
+      } else {
+        return LoginScreen();
+      }
+    }
   }
 }
