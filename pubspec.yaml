@@ -23,6 +23,9 @@ dependencies:
   google_fonts: ^6.3.1
   permission_handler: ^12.0.1
   point_in_polygon: ^1.0.0
+  http: ^1.2.1
+  material_symbols_icons: ^4.2873.0
+  markdown_widget: ^2.3.2
   
 
 

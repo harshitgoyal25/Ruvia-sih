@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:isolate';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:background_locator_2/background_locator.dart';
 import 'package:background_locator_2/location_dto.dart';
 import 'package:background_locator_2/settings/android_settings.dart';
-
 import 'package:background_locator_2/settings/locator_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,17 +31,9 @@ class LocationCallbackHandler {
     await prefs.setStringList('run_points', pointsJson);
   }
 
-  static Future<void> initCallback(Map<String, dynamic> params) async {
-    // Initialize callback for Android
-  }
-
-  static Future<void> disposeCallback() async {
-    // Dispose callback for Android
-  }
-
-  static Future<void> notificationCallback() async {
-    // Notification tap callback for Android
-  }
+  static Future<void> initCallback(Map<String, dynamic> params) async {}
+  static Future<void> disposeCallback() async {}
+  static Future<void> notificationCallback() async {}
 }
 
 class StartRunPage extends StatefulWidget {
@@ -105,32 +95,86 @@ class _StartRunPageState extends State<StartRunPage> {
 
   Future<void> _showPermissionDialogAndStart() async {
     final proceed = await showDialog<bool>(
+      barrierDismissible: false,
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Allow Location Access'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.location_on, size: 64, color: Colors.green),
-            const SizedBox(height: 16),
-            Text(
-              'Ruvia needs your location—even in the background—for accurate running route tracking.\n\n'
-              'Please grant both location and background location permission.',
-              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-              textAlign: TextAlign.center,
-            ),
-          ],
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF1a1b1a),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.location_on,
+                size: 64,
+                color: const Color.fromARGB(255, 99, 227, 82),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'Allow Location Access',
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 19,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Ruvia needs your location—even in the background—for accurate running route tracking.\n\n'
+                'Please grant both location and background location permission.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                  color: Colors.grey[300],
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red, width: 1.8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        textStyle: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 99, 227, 82),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        textStyle: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Allow'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: Colors.red)),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Allow'),
-          ),
-        ],
       ),
     );
     if (proceed == true) {
@@ -159,11 +203,9 @@ class _StartRunPageState extends State<StartRunPage> {
     _stopwatch.reset();
     _stopwatch.start();
 
-    // Clear any previous run points
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('run_points');
 
-    // Start background location
     Map<String, dynamic> data = {'countInit': 1};
     await BackgroundLocator.registerLocationUpdate(
       LocationCallbackHandler.callback,
@@ -188,7 +230,6 @@ class _StartRunPageState extends State<StartRunPage> {
       ),
     );
 
-    // Foreground position updates for user UI
     _positionStream =
         geo.Geolocator.getPositionStream(
           locationSettings: const geo.LocationSettings(
@@ -269,23 +310,80 @@ class _StartRunPageState extends State<StartRunPage> {
 
   Future<void> _stopRun() async {
     final confirm = await showDialog<bool>(
+      barrierDismissible: false,
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("End this run?"),
-        content: const Text(
-          "Are you sure you want to finish and save this run?",
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF1a1b1a),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.flag_rounded,
+                size: 64,
+                color: Colors.redAccent.shade200,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "End this run?",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 19,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Are you sure you want to finish and save this run?",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey, width: 1.7),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        textStyle: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        textStyle: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text("Finish"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Finish"),
-          ),
-        ],
       ),
     );
     if (confirm != true) return;
@@ -296,7 +394,6 @@ class _StartRunPageState extends State<StartRunPage> {
     _stopwatch.stop();
     _timer?.cancel();
 
-    // Stop background location
     await BackgroundLocator.unRegisterLocationUpdate();
 
     await loadAndUploadRoute();
@@ -503,7 +600,7 @@ class _StartRunPageState extends State<StartRunPage> {
                         if (!_isRunning)
                           _mainButton(
                             "Start Run",
-                            Color.fromARGB(255, 99, 227, 82),
+                            const Color.fromARGB(255, 99, 227, 82),
                             _showPermissionDialogAndStart,
                             textColor: Colors.white,
                           ),

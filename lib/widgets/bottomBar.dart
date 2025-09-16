@@ -41,7 +41,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(_icons.length, (index) {
           final isSelected = index == currentIndex;
-          final color = isSelected ? Colors.white : Colors.white70;
+          final color = isSelected
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(179, 255, 255, 255);
 
           return GestureDetector(
             onTap: () {
@@ -81,7 +83,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color.fromARGB(255, 99, 227, 82)
+                    ? const Color(0xFF79c339)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),

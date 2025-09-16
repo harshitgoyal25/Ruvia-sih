@@ -7,8 +7,10 @@ import 'package:geolocator/geolocator.dart';
 
 import 'widgets/floating_profile_button.dart';
 import 'widgets/bottomBar.dart';
-import 'profile.dart'; // Your user profile screen
-import 'package:point_in_polygon/point_in_polygon.dart'; // Add this package
+import 'profile.dart';
+import 'widgets/chatbot_fab.dart'; // Add this import
+import 'widgets/chatbot_panel.dart'; // Add this import
+import 'package:point_in_polygon/point_in_polygon.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,14 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
   List<Polygon> _polygons = [];
-  // List of polygon ownership maps: {'polygon': Polygon, 'userId': String}
   List<Map<String, dynamic>> _polygonOwners = [];
   int _selectedBottomIndex = 0;
   LatLng? _currentLatLng;
-  final LatLng _defaultLocation = LatLng(
-    22.726405,
-    75.871887,
-  ); // Indore fallback
+  final LatLng _defaultLocation = LatLng(22.726405, 75.871887);
 
   @override
   void initState() {
@@ -121,10 +119,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Point-in-polygon detection using the 'point_in_polygon' package
-
   bool _containsLatLng(List<LatLng> polygon, LatLng point) {
-    // The Point constructor expects {required num x, required num y}
     final poly = polygon
         .map((latLng) => Point(x: latLng.latitude, y: latLng.longitude))
         .toList();
@@ -165,7 +160,7 @@ class _HomePageState extends State<HomePage> {
             color: Color.fromARGB(255, 99, 227, 82),
           ),
           onPressed: () {
-            // Handle notification tap
+            // TODO: notification actions
           },
         ),
         actions: [
@@ -175,72 +170,101 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 99, 227, 82),
-        child: const Icon(Icons.refresh_rounded, color: Colors.black),
-        tooltip: 'Refresh Map',
-        onPressed: fetchTerritories,
-      ),
-      body: FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(
-          initialCenter: center,
-          initialZoom: 17.0,
-          minZoom: 3,
-          onTap: (tapPosition, tappedLatLng) {
-            for (var entry in _polygonOwners) {
-              Polygon polygon = entry['polygon'];
-              String userId = entry['userId'];
-              if (_containsLatLng(polygon.points, tappedLatLng)) {
-                _navigateToProfile(userId);
-                break;
-              }
-            }
-          },
-        ),
+      // Use a Stack to overlay two FABs
+      body: Stack(
         children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-            userAgentPackageName: 'your.app.package',
-          ),
-          PolygonLayer(polygons: _polygons),
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: center,
-                width: 120,
-                height: 80,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        'You',
-                        style: TextStyle(color: Colors.white),
-                      ),
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: center,
+              initialZoom: 17.0,
+              minZoom: 3,
+              onTap: (tapPosition, tappedLatLng) {
+                for (var entry in _polygonOwners) {
+                  Polygon polygon = entry['polygon'];
+                  String userId = entry['userId'];
+                  if (_containsLatLng(polygon.points, tappedLatLng)) {
+                    _navigateToProfile(userId);
+                    break;
+                  }
+                }
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+                userAgentPackageName: 'your.app.package',
+              ),
+              PolygonLayer(polygons: _polygons),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: center,
+                    width: 120,
+                    height: 80,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'You',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    Container(
-                      width: 18,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
+          ),
+
+          // Chatbot FAB - positioned above the refresh FAB
+          Positioned(
+            bottom: 88, // adjust as needed
+            right: 20,
+            child: ChatBotFAB(
+              onPressed: () {
+                showChatBotPanel(context);
+              },
+            ),
+          ),
+
+          // Refresh FAB - bottom right
+          Positioned(
+            bottom: 16,
+            right: 20,
+            child: Material(
+              color: Colors.black, // So the original FAB background shows
+              elevation:
+                  5, // Increase for a stronger shadow (default FAB is elevation 6)
+              shape: const CircleBorder(),
+              child: FloatingActionButton(
+                backgroundColor: const Color(0xFF79c339),
+                child: const Icon(Icons.refresh_rounded, color: Colors.black),
+                tooltip: 'Refresh Map',
+                onPressed: fetchTerritories,
+              ),
+            ),
           ),
         ],
       ),
@@ -252,6 +276,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// --- Helper class for color parsing ---
 class HexColor extends Color {
   HexColor(final int hexColor) : super(hexColor);
 
