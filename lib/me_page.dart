@@ -107,7 +107,7 @@ class _MePageState extends State<MePage> {
                   ),
                   const SizedBox(height: 18),
 
-                  // XP Challenges (minimal + consistent)
+                  // XP Challenges (horizontal scroll)
                   Card(
                     color: const Color(0xFF232323),
                     elevation: 0,
@@ -158,235 +158,254 @@ class _MePageState extends State<MePage> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Competitions
-                  Card(
-                    color: const Color(0xFF232323),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Competitions',
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Terra Comp 25.7 | \$2,988 AUD in Prizes',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF79c339),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: const [
-                                _CompetitionCard(
-                                  title: "THE BREATH HAUS",
-                                  time: "Ends: 20h 16m",
-                                ),
-                                SizedBox(width: 10),
-                                _CompetitionCard(
-                                  title: "THE BREATH HAUS",
-                                  time: "Ends: 20h 16m",
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF79c339),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(14),
-                                ),
-                              ),
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 8,
-                              ),
-                            ),
-                            child: Text(
-                              'View competition',
+                  // Competitions (full width)
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      color: const Color(0xFF232323),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Competitions',
                               style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: () {},
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              'Terra Comp 25.7 | \$2,988 AUD in Prizes',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF79c339),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: const [
+                                  _CompetitionCard(
+                                    title: "THE BREATH HAUS",
+                                    time: "Ends: 20h 16m",
+                                  ),
+                                  SizedBox(width: 10),
+                                  _CompetitionCard(
+                                    title: "THE BREATH HAUS",
+                                    time: "Ends: 20h 16m",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF79c339),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 8,
+                                ),
+                              ),
+                              child: Text(
+                                'View competition',
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
 
-                  // Local Battle
-                  Card(
-                    color: const Color(0xFF232323),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
+                  // Local Battle (full width)
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      color: const Color(0xFF232323),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
                       ),
-                      child: ListTile(
-                        dense: true,
-                        leading: const Icon(
-                          Icons.sports_kabaddi,
-                          color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 14,
                         ),
-                        title: Text(
-                          'Local Battle',
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.bold,
+                        child: ListTile(
+                          dense: true,
+                          leading: const Icon(
+                            Icons.sports_kabaddi,
                             color: Colors.white,
                           ),
+                          title: Text(
+                            'Local Battle',
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Find nearby runners to compete!',
+                            style: GoogleFonts.montserrat(
+                              color: const Color(0xFF79c339),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Color.fromARGB(202, 255, 255, 255),
+                          ),
+                          onTap: () {
+                            // Navigator.pushNamed(context, '/localBattle');
+                          },
                         ),
-                        subtitle: Text(
-                          'Find nearby runners to compete!',
-                          style: GoogleFonts.montserrat(
-                            color: const Color(0xFF79c339),
-                            fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Join/Create Club (full width)
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      color: const Color(0xFF232323),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 20,
+                        ),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              OutlinedButton(
+                                onPressed: () {
+                                  // Navigator.pushNamed(context, '/joinClub');
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(14),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 22,
+                                    vertical: 15,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Join a Club",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              OutlinedButton(
+                                onPressed: null, // Disabled
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: Color.fromARGB(221, 255, 255, 255),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(14),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 22,
+                                    vertical: 15,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Create Your Own Club",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Color.fromARGB(202, 255, 255, 255),
-                        ),
-                        onTap: () {
-                          // Navigator.pushNamed(context, '/localBattle');
-                        },
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // Join/Create Club - horizontal, minimal
-                  Card(
-                    color: const Color(0xFF232323),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            OutlinedButton(
-                              onPressed: () {
-                                // Navigator.pushNamed(context, '/joinClub');
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(14),
-                                  ),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 22,
-                                  vertical: 15,
-                                ),
-                              ),
-                              child: Text(
-                                "Join a Club",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            OutlinedButton(
-                              onPressed: null, // Disabled
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: Color.fromARGB(221, 255, 255, 255),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(14),
-                                  ),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 22,
-                                  vertical: 15,
-                                ),
-                              ),
-                              child: Text(
-                                "Create Your Own Club",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
+                  // Insights (full width)
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      color: const Color(0xFF232323),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 24,
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Insights
-                  Card(
-                    color: const Color(0xFF232323),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 24,
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/insights');
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Insights:",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(14),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/insights');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  "Insights:",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 14),
-                            const Icon(Icons.stars, color: Color(0xFF79c339)),
-                            const SizedBox(width: 10),
-                            Text(
-                              "Achievements / Stats",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 15,
+                              const SizedBox(width: 14),
+                              const Icon(Icons.stars, color: Color(0xFF79c339)),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Text(
+                                  "Achievements / Stats",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

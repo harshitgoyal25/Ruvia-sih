@@ -63,11 +63,12 @@ class _SplashScreenGateState extends State<SplashScreenGate> {
 
     // Wait for first Firebase user event
     FirebaseAuth.instance.authStateChanges().first.then((user) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _firebaseReady = true;
           _user = user;
         });
+      }
     });
   }
 

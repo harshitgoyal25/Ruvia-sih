@@ -44,25 +44,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
           .collection('users')
           .doc(uid)
           .get();
-
       final data = doc.data();
-      if (data != null) {
-        _usernameController.text = data['name'] ?? '';
-        final savedHex = data['color'] ?? '#00FF00'; // fallback
-        _selectedColorName = reverseColorOptions[savedHex] ?? 'Green';
+      if (data != null && mounted) {
+        final String savedHex = data['color'] ?? '#00FF00';
+        setState(() {
+          _usernameController.text = data['name'] ?? '';
+          _selectedColorName = reverseColorOptions[savedHex] ?? 'Green';
+        });
       }
-      setState(() {});
     } catch (e) {
-      print('Error loading user profile: $e');
+      if (mounted) {
+        print('Error loading user profile: $e');
+      }
     }
   }
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     try {
       Map<String, dynamic> updateData = {};
@@ -79,16 +82,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
             .doc(uid)
             .update(updateData);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully!')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Profile updated successfully!')),
+          );
+        }
       }
 
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error updating profile: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error updating profile: $e')));
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -143,7 +152,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           key: _formKey,
           child: Column(
             children: [
-              // Username field
               TextFormField(
                 controller: _usernameController,
                 style: const TextStyle(color: Colors.white),
@@ -162,7 +170,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 20),
 
-              // Color dropdown
               InputDecorator(
                 decoration: InputDecoration(
                   labelText: 'Territory Color',
@@ -214,7 +221,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 30),
 
-              // Save Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

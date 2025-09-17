@@ -4,13 +4,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'widgets/point_card.dart';
 import 'widgets/floating_profile_button.dart';
 import 'widgets/bottomBar.dart';
-import 'profile.dart';
-import 'widgets/chatbot_fab.dart'; // Add this import
-import 'widgets/chatbot_panel.dart'; // Add this import
+
+import 'widgets/chatbot_fab.dart';
+import 'widgets/chatbot_panel.dart';
 import 'package:point_in_polygon/point_in_polygon.dart';
+
+import 'run_info.dart';
+import 'edit.dart'; // <-- Import your EditProfilePage
 
 class HomePage extends StatefulWidget {
   @override
@@ -44,7 +47,6 @@ class _HomePageState extends State<HomePage> {
           permission == LocationPermission.deniedForever) {
         return;
       }
-
       final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
@@ -75,6 +77,7 @@ class _HomePageState extends State<HomePage> {
       final data = doc.data();
       final locationData = data['locationData'] as List<dynamic>;
       final userId = data['userId'] as String;
+      final runDocId = doc.id;
 
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -96,13 +99,18 @@ class _HomePageState extends State<HomePage> {
 
       Polygon polygon = Polygon(
         points: points,
-        color: HexColor.fromHex(userColor).withOpacity(0.8),
+        color: HexColor.fromHex(userColor).withOpacity(0.4),
         borderColor: HexColor.fromHex(userColor),
         borderStrokeWidth: 2,
         isFilled: true,
       );
       polygons.add(polygon);
-      polygonOwners.add({'polygon': polygon, 'userId': userId});
+      polygonOwners.add({
+        'polygon': polygon,
+        'userId': userId,
+        'runDocId': runDocId,
+        'points': points,
+      });
     }
 
     if (!mounted) return;
@@ -114,7 +122,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && polygons.isNotEmpty && polygons.first.points.isNotEmpty) {
         final firstPoint = polygons.first.points.first;
-        _mapController.move(firstPoint, 15); // Zoom level adjustable
+        _mapController.move(firstPoint, 17); // Zoom level adjustable
       }
     });
   }
@@ -129,11 +137,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigateToProfile(String userId) {
+  void _navigateToRunInfo(String userId, String runDocId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProfilePage(userId: userId)),
+      MaterialPageRoute(
+        builder: (context) => RunInfoPage(userId: userId, runDocId: runDocId),
+      ),
     );
+  }
+
+  // <-- Profile editing function with refresh logic
+  void _goToEditProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const EditProfilePage()),
+    ).then((_) => fetchTerritories());
   }
 
   @override
@@ -159,18 +177,25 @@ class _HomePageState extends State<HomePage> {
             Icons.notifications,
             color: Color.fromARGB(255, 99, 227, 82),
           ),
-          onPressed: () {
-            // TODO: notification actions
-          },
+          onPressed: () {},
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: AppBarPointsCard(),
+          ),
+          // ADD THIS BUTTON for EDIT PROFILE and refresh logic!
+          // IconButton(
+          //   icon: const Icon(Icons.edit, color: Color(0xFF79c339), size: 22),
+          //   onPressed: () => _goToEditProfile(context),
+          //   tooltip: 'Edit Profile',
+          // ),
           const Padding(
             padding: EdgeInsets.only(right: 12),
             child: FloatingProfileButton(avatarImage: "assets/avator.png"),
           ),
         ],
       ),
-      // Use a Stack to overlay two FABs
       body: Stack(
         children: [
           FlutterMap(
@@ -183,8 +208,10 @@ class _HomePageState extends State<HomePage> {
                 for (var entry in _polygonOwners) {
                   Polygon polygon = entry['polygon'];
                   String userId = entry['userId'];
-                  if (_containsLatLng(polygon.points, tappedLatLng)) {
-                    _navigateToProfile(userId);
+                  String runDocId = entry['runDocId'];
+                  List<LatLng> points = entry['points'];
+                  if (_containsLatLng(points, tappedLatLng)) {
+                    _navigateToRunInfo(userId, runDocId);
                     break;
                   }
                 }
@@ -237,10 +264,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-
-          // Chatbot FAB - positioned above the refresh FAB
+          // Chatbot FAB
           Positioned(
-            bottom: 88, // adjust as needed
+            bottom: 88,
             right: 20,
             child: ChatBotFAB(
               onPressed: () {
@@ -248,15 +274,13 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-
-          // Refresh FAB - bottom right
+          // Refresh FAB
           Positioned(
             bottom: 16,
             right: 20,
             child: Material(
-              color: Colors.black, // So the original FAB background shows
-              elevation:
-                  5, // Increase for a stronger shadow (default FAB is elevation 6)
+              color: Colors.black,
+              elevation: 5,
               shape: const CircleBorder(),
               child: FloatingActionButton(
                 backgroundColor: const Color(0xFF79c339),
@@ -276,10 +300,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// --- Helper class for color parsing ---
 class HexColor extends Color {
   HexColor(final int hexColor) : super(hexColor);
-
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

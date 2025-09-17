@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:isolate';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -425,15 +424,19 @@ class _StartRunPageState extends State<StartRunPage> {
     if (user == null) return;
 
     final elapsedSeconds = _stopwatch.elapsed.inSeconds;
+    final runArea = calculateArea(finalRoutePoints);
+    final xp = (runArea / 100).floor(); // Calculate XP as integer
+
     final runPace = _totalDistance > 0
         ? elapsedSeconds / (_totalDistance / 1000)
         : 0;
 
     final runData = {
       'distance': _totalDistance,
-      'areaCaptured': calculateArea(finalRoutePoints),
+      'areaCaptured': runArea,
       'timeTaken': elapsedSeconds,
       'pace': runPace,
+      'xp': xp, // Save XP here
       'timestamp': FieldValue.serverTimestamp(),
       'locationData': finalRoutePoints
           .map((e) => {'lat': e.latitude, 'lng': e.longitude})
@@ -449,6 +452,7 @@ class _StartRunPageState extends State<StartRunPage> {
         .doc();
 
     await runRef.set(runData);
+
     final publicRef = FirebaseFirestore.instance
         .collection('publicRuns')
         .doc(runRef.id);
