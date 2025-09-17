@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:ruvia/widgets/floating_profile_button.dart';
+import 'run_info.dart'; // <-- make sure this import is present
 
 class ProfilePage extends StatefulWidget {
   final String? userId;
@@ -19,7 +20,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Safe fallback to current user if userId isn't provided
     uid = widget.userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 
@@ -198,11 +198,25 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: _runLogItem(
-                            formattedDate,
-                            _formatDuration(duration),
-                            (distance / 1000).toStringAsFixed(2),
-                            _formatPace(pace),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            splashColor: accentColor.withOpacity(0.14),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RunInfoPage(
+                                    userId: uid,
+                                    runDocId: run.id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _runLogItem(
+                              formattedDate,
+                              _formatDuration(duration),
+                              (distance / 1000).toStringAsFixed(2),
+                              _formatPace(pace),
+                            ),
                           ),
                         );
                       }).toList(),
@@ -256,7 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 70,
             child: Text(
               date,
