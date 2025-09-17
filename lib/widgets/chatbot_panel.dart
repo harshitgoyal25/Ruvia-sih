@@ -171,7 +171,7 @@ class _ChatBotPanelState extends State<ChatBotPanel> {
 
     try {
       const String groqApiKey =
-          "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";
+          "";
       final url = Uri.parse('https://api.groq.com/openai/v1/chat/completions');
       final response = await http.post(
         url,
